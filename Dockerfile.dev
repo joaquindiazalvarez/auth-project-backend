@@ -14,4 +14,4 @@ RUN pipenv install --deploy --system
 
 ENTRYPOINT ["python3"] 
 
-CMD ["app/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["api/manage.py", "runserver", "0.0.0.0:8000"]
