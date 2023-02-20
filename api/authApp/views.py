@@ -25,13 +25,13 @@ def register(request):
     if checkuser:
         return HttpResponseBadRequest("User already exist")
     else:
-        newUser = User()
-        newUser.name = data["name"]
-        newUser.email = data["email"]
-        newUser.password = data["password"]
+        new_user = User()
+        new_user.name = data["name"]
+        new_user.email = data["email"]
+        new_user.password = data["password"]
         birthdate = datetime.strptime(data["birthdate"], '%Y-%m-%d').date()
-        newUser.birthdate= birthdate
-        newUser.save()
+        new_user.birthdate= birthdate
+        new_user.save()
         return Response({'message': "Successfully added new user"})
 
 @api_view(['POST'])
@@ -39,24 +39,33 @@ def login(request):
     data = json.loads(request.body)
     email = data["email"]
     password = data["password"]
-    userQueried = User.objects.filter(email = email).first()
-    if not userQueried:
+    user_queried = User.objects.filter(email = email).first()
+    if not user_queried:
         return Response({"error":"email"}, status=400)
-    if userQueried and userQueried.password == password:
+    if user_queried and user_queried.password == password:
         # Set the token expiration time
         token_exp = datetime.utcnow() + timedelta(hours=1)
 
         #crea el payload de JWT
         payload = {
-            'id': userQueried.id,
+            'id': user_queried.id,
             'exp': token_exp
         }
         #Genera el token JWT
         token = jwt.encode(payload, 'secret', algorithm='HS256')
         return Response({"loged": True, "token":token})
-    if userQueried and userQueried.password != password:
+    if user_queried and user_queried.password != password:
         return Response({"error":"password"}, status=400)
-    
+
+@api_view(['POST'])
+def validate_email(request):
+    data = json.loads(request.body)
+    user_queried = User.objects.filter(email=data["email"]).first()
+    if user_queried:
+        return Response({"email_in_use": True})
+    else:
+        return Response({"email_in_use": False})
+
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def get_user_information(request):
