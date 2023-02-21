@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,15 +82,13 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {  
     'default': {  
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'pythonapp',  
-        'USER': 'joaquin',  
-        'PASSWORD': '123456',  
-        'HOST': 'mysql',  
-        'PORT': '3306',  
-        'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
-        }  
+        'ENGINE': 'django.db.backends.postgresql',  
+        'NAME': os.environ.get('DB_HOST'),  
+        'USER': os.environ.get('DB_USER'),  
+        'PASSWORD': os.environ.get('DB_PASSWORD'),  
+        'HOST': os.environ.get('DB_HOST'),  
+        'PORT': os.environ.get('DB_PORT'),  
+
     }  
 }  
 

@@ -1,6 +1,6 @@
 version: "3.9"
 services: 
-  miapp:
+  django:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -8,41 +8,46 @@ services:
       - "8000:8000"
       - "8082:8082"
     links:
-      - mysql
+      - postgres
     volumes:
       - .:/home/project
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: pythonapp
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       wait-for-db:
         condition: service_completed_successfully
     networks:
       - python-network
-  mysql:  
-    image: mysql
-    ports: 
-      - "3306:3306"
+  postgres:
+    image: postgres
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
-      - MYSQL_DATABASE=pythonapp
-      - MYSQL_USER=joaquin
-      - MYSQL_PASSWORD=123456
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: pythonapp
+    ports:
+      - "5432:5432"
     networks:
       - python-network
-  phpmyadmin:
-    image: phpmyadmin
-    ports:
-      - 8081:80
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
     environment:
-      - PMA_HOST=mysql
-    depends_on:
-      - mysql
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
     networks:
       - python-network
   wait-for-db:
     image: atkrad/wait4x
     depends_on:
-      - mysql
-    command: tcp mysql:3306 -t 30s -i 250ms
+      - postgres
+    command: tcp postgres:5432 -t 30s -i 250ms
     networks:
       - python-network
 networks:
