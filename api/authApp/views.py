@@ -10,6 +10,9 @@ import json
 
 @api_view(['POST'])
 def register(request):
+    """
+    this view retrieve the information of an user register
+    """
     data = json.loads(request.body)
     email = data["email"]
     print(data)
@@ -28,6 +31,10 @@ def register(request):
 
 @api_view(['POST'])
 def login(request):
+    """
+    this view takes the login credentials and outputs
+    a token with user id if login is valid
+    """
     data = json.loads(request.body)
     email = data["email"]
     password = data["password"]
@@ -51,6 +58,11 @@ def login(request):
 
 @api_view(['POST'])
 def validate_email(request):
+    """
+    this view checks if the email in the 
+    register form is already in use
+    and outputs a json boolean
+    """
     data = json.loads(request.body)
     user_queried = User.objects.filter(email=data["email"]).first()
     if user_queried:
@@ -61,6 +73,10 @@ def validate_email(request):
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def get_user_information(request):
+    """
+    this view takes the previously generated token
+    and output the name of the user and the birthdate
+    """
     token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
     decoded_token = jwt.decode(token, 'secret', algorithms=['HS256'])
     userQueried = User.objects.get(id=decoded_token["id"])
