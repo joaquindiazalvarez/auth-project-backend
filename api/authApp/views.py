@@ -7,15 +7,7 @@ from django.http import HttpResponseBadRequest
 import jwt
 from datetime import datetime, timedelta
 import json
-# Create your views here.
-@api_view(['GET'])
-def say_hello(request):
-    """
-    returns a json response
-    methods: GET
-    args:request
-    """
-    return Response({'message': "Hello world"})
+
 @api_view(['POST'])
 def register(request):
     data = json.loads(request.body)
