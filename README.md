@@ -17,6 +17,7 @@ POSTGRES_USER=tu_usuario
 POSTGRES_PASSWORD=tu_contraseña
 PGADMIN_DEFAULT_EMAIL=tu_email
 PGADMIN_DEFAULT_PASSWORD=tu_contraseña
+DJANGO_SECRET_KEY=tu_secret_key
 ```  
 
 aquí se reemplazan los valores asignados por los que deseemos para nuestro proyecto  

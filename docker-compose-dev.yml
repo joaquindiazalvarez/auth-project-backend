@@ -17,6 +17,7 @@ services:
       DB_NAME: pythonapp
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${DJANGO_SECRET_KEY}
     depends_on:
       wait-for-db:
         condition: service_completed_successfully
