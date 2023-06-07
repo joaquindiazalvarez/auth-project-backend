@@ -5,15 +5,14 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "8000:8000"
-      - "8082:8082"
+      - "$DJANGO_PORT:8000"
     links:
       - postgres
     volumes:
       - .:/home/project
     environment:
       DB_HOST: postgres
-      DB_PORT: 5432
+      DB_PORT: ${POSTGRES_PORT}
       DB_NAME: pythonapp
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
@@ -31,7 +30,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: pythonapp
     ports:
-      - "5432:5432"
+      - "$POSTGRES_PORT:5432"
     networks:
       - python-network
   pgadmin:
